@@ -95,7 +95,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
-    # دیزاینکرنا تەمام و شاهانە یا HTML/CSS بۆ هەمی جۆرێن وێبسایتان
     website_html = f"""
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
@@ -162,7 +161,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         repo_link = f"https://github.com/{GITHUB_USERNAME}/{repo_name}"
         live_link = f"https://{GITHUB_USERNAME}.github.io/{repo_name}/"
 
-        # تۆمارکرنا داتایێ ل ناڤ داتابەیسێ
         try:
             conn = sqlite3.connect('legend_empire.db')
             cursor = conn.cursor()
@@ -183,7 +181,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         await context.bot.send_message(chat_id=chat_id, text=reply_text, parse_mode="Markdown")
 
-        # هناردنا گیماڵی
         try:
             msg = MIMEMultipart()
             msg['From'] = SENDER_EMAIL
@@ -192,17 +189,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             
             email_body = f"""
 سلاڤ یوسف،
-
 بۆتێ تە یێ Legend AI Empire V3 وێبسایتەکێ نوی بۆ بەکارهێنەر ({username}) چێکر!
-
-زانیاریێن وێبسایتێ:
-- ناڤێ بەکارهێنەری: {username}
-- داخوازا وی: {user_message}
-- لینکێ سەرەکی: {live_link}
-- ڕێپۆزێتۆری: {repo_link}
-- خودان: @{OWNERS[0]} & @{OWNERS[1]} (@{CHANNEL_NAME})
-
-پیرۆز بیت!
+Zanyarî: {live_link}
             """
             msg.attach(MIMEText(email_body, 'plain', 'utf-8'))
 
@@ -221,14 +209,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 def main():
-    application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
-    
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("stats", stats))
-    application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
-    
-    # ل ڤێرێ run_polling ل جهێ run_webhook بکار بینە دا بێ کێشە کار بکەت
-    application.run_polling()
+    app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("stats", stats_command)) # لێرە گۆڕی بۆ stats_command
+    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
+    print("🤖 Legend AI Empire Bot V3 دەست بە کار بوو...")
+    app.run_polling()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

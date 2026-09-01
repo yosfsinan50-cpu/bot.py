@@ -221,12 +221,14 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 def main():
-    app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("stats", stats_command))
-    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
-    print("🤖 Legend AI Empire Bot V3 دەست بە کار بوو...")
-    app.run_polling()
+    application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
+    
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("stats", stats))
+    application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
+    
+    # ل ڤێرێ run_polling ل جهێ run_webhook بکار بینە دا بێ کێشە کار بکەت
+    application.run_polling()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
